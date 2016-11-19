@@ -2,12 +2,12 @@ version: '2'
 
 services:
   db:
-    image: CHANGEME/mongodb:3.2.6
+    image: lfdgbple/mongodb:3.2.6
     networks:
       - back
 
   blog_backend:
-    image: CHANGEME/blog_backend
+    image: lfdgbple/blog_backend
     environment:
       - MONGO_HOST=db
     networks:
@@ -15,7 +15,7 @@ services:
       - front
 
   blog_ui:
-    image: CHANGEME/blog_ui
+    image: lfdgbple/blog_ui
     env_file:
       - blog-backend-vars.env
     ports:

@@ -2,7 +2,7 @@ node('docker') {
 withCredentials([usernamePassword(credentialsId: 'docker_registry',
   passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USER')]) {
 
-def staging_docker = "<docker-machine-mk ip>"
+def staging_docker = "35.156.40.16"
 def git_repo = env.GIT_REPO_URL
 
 stage 'Checkout git changes'
