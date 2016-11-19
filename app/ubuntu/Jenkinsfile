@@ -1,0 +1,28 @@
+node('docker') {
+withCredentials([usernamePassword(credentialsId: 'docker_registry',
+  passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USER')]) {
+
+def staging_docker = "<docker-machine-mk ip>"
+def git_repo = env.GIT_REPO_URL
+
+stage 'Checkout git changes'
+  checkout scm
+
+stage 'Build Image'
+  //Build image from Dockerfile
+  def pkg = docker.build ("${env.DOCKERHUB_USER}/ubuntu", 'app/ubuntu')
+
+stage 'Run Infra checks'
+  pkg.inside {
+    sh '[ `cat /etc/apt/sources.list | grep de.archive.ubuntu.com | wc -l | awk "{print $1 $2}"` -gt 1 ]'
+  }
+
+stage 'Push Image to DockerHub'
+  //Pushing the image into DockerHub
+  docker.withRegistry ('https://index.docker.io/v1/', 'docker_registry') {
+    pkg.push '16.04'
+    pkg.push 'latest'
+  }
+
+}
+}

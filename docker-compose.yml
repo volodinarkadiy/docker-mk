@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+  jenkins-master:
+    build: infrastructure/jenkins-master
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  jenkins-slave:
+    restart: always
+    build: infrastructure/jenkins-slave
+    privileged: true
+    volumes:
+      - jenkins_slave_home:/var/jenkins_home
+    environment:
+      - JENKINS_URL=http://jenkins-master:8080 <enter_your_secret> slave1
+volumes:
+  jenkins_home:
+    driver: local
+  jenkins_slave_home:
+    driver: local

@@ -1,0 +1,29 @@
+node('docker') {
+withCredentials([usernamePassword(credentialsId: 'docker_registry',
+  passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USER')]) {
+
+def id = "${env.BUILD_ID}"
+def staging_docker = "<docker-machine-mk ip>"
+def git_repo = env.GIT_REPO_URL
+
+  stage 'Checkout'
+    checkout scm
+
+  stage 'Package Image'
+    //Packaging the image into a Docker image
+    def pkg = docker.build ("${env.DOCKERHUB_USER}/blog_backend", 'app/blog_ui')
+
+  //Допишем stage с тестами после этого комментария
+
+  stage 'Push Image to DockerHub'
+    //Pushing the packaged app in image into DockerHub
+    docker.withRegistry ('https://index.docker.io/v1/', 'docker_registry') {
+      pkg.push "${id}"
+      pkg.push 'latest'
+  }
+
+  //Дописываем stage с деплоем сразу после комментария
+
+
+  }
+}

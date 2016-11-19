@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  db:
+    image: CHANGEME/mongodb:3.2.6
+    networks:
+      - back
+
+  blog_backend:
+    image: CHANGEME/blog_backend
+    environment:
+      - MONGO_HOST=db
+    networks:
+      - back
+      - front
+
+  blog_ui:
+    image: CHANGEME/blog_ui
+    env_file:
+      - blog-backend-vars.env
+    ports:
+      - "80:9292"
+    networks:
+      - front
+networks:
+  front:
+    driver: bridge
+  back:
+    driver: bridge
