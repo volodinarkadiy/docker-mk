@@ -11,7 +11,7 @@ def git_repo = env.GIT_REPO_URL
 
   stage 'Package Image'
     //Packaging the image into a Docker image
-    def pkg = docker.build ("${env.DOCKERHUB_USER}/blog_backend", 'app/blog_ui')
+    def pkg = docker.build ("${env.DOCKERHUB_USER}/blog_ui", 'app/blog_ui')
 
   //Допишем stage с тестами после этого комментария
   stage 'Run tests'
