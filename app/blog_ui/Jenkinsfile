@@ -14,6 +14,10 @@ def git_repo = env.GIT_REPO_URL
     def pkg = docker.build ("${env.DOCKERHUB_USER}/blog_backend", 'app/blog_ui')
 
   //Допишем stage с тестами после этого комментария
+  stage 'Run tests'
+    pkg.inside {
+      sh 'rspec app/blog_ui/tests.rb'
+  }
 
   stage 'Push Image to DockerHub'
     //Pushing the packaged app in image into DockerHub
